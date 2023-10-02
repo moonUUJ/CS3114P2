@@ -62,7 +62,7 @@ public class World<T> {
 
                 "The size of world should be an integer of 2^n");
 
-        }
+        } 
 
         size = worldSize;
 
@@ -176,8 +176,8 @@ public class World<T> {
 
         }
 
-        KeyPair locationKey = new KeyPair(sem.x(), sem.y()); 
-        map
+        KeyPair locationKey = new KeyPair(sem.x(), sem.y(), sem); 
+       
         
         KeyValue idKey = new KeyValue((Integer)sem.id(), sem);
 

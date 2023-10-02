@@ -30,7 +30,7 @@ import java.util.*;
  *            the generics
  * @param <root>
  */
-public class BST<T extends Comparable<T>, root> {
+public class BST<T extends Comparable<T>> {
 
     /**
      * 
@@ -40,7 +40,7 @@ public class BST<T extends Comparable<T>, root> {
 
     private BinNode<KeyValue> radicle;
     private Comparator<T> comparator;
-
+    private int level; 
 
 
     /**
@@ -55,9 +55,13 @@ public class BST<T extends Comparable<T>, root> {
 
         comparator = null;
 
+        level = 0;
     }
 
-
+    public void setRoot() {
+        radicle = null;
+        System.out.println("emptied");
+    }
     /**
      * 
      * The compare method that has an important role to define whether
@@ -71,11 +75,11 @@ public class BST<T extends Comparable<T>, root> {
      * @return -1 if x is larger and 1 if y is larger
      */
     private int compare(T x, T y) {
-        // if (comparator == null)
+        if (comparator == null)
         return x.compareTo(y);
 
-        // else
-        // return comparator.compare(x, y);
+         else
+         return comparator.compare(x, y);
 
     }
 
@@ -164,7 +168,7 @@ public class BST<T extends Comparable<T>, root> {
      */
 
     private boolean inorderSearch(BinNode<KeyValue> p, T element) {
-
+        level = level + 1; 
         if (p == null) {
             return false;
 
@@ -172,7 +176,7 @@ public class BST<T extends Comparable<T>, root> {
 
         if (p.data.getKey() == element) {
             // return p.data;
-            System.out.println(p.data.getSeminar());
+            System.out.println(p.data.getSeminar() + "with level: " + level);
             return true;
         }
         else if (compare((T)p.data.getKey(), element) > 0) {
@@ -184,6 +188,13 @@ public class BST<T extends Comparable<T>, root> {
 
     }
 
+    /**
+     * Method to get the current level 
+     * @return level the height of the binary search tree 
+     */
+    public int getLevel() {
+        return level;
+    }
 
     /**
      * 

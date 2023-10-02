@@ -174,6 +174,8 @@ public class BSTTest extends TestCase {
         assertTrue(bst.inorderSearch((String)"key"));
         assertTrue(bst.inorderSearch((String)kv3.getKey()));
         bst.inorderSearch((String)kv2.getKey());
+        bst.setRoot();
+        bst.inorderSearch((String)kv2.getKey());
     }
 
 
@@ -187,6 +189,7 @@ public class BSTTest extends TestCase {
         KeyValue keyInt = new KeyValue(a, sem);
         bst.insert(keyInt);
         // bstInt.delete(a);
+        
 
     }
 }

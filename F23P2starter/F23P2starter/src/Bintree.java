@@ -1,108 +1,279 @@
+import java.util.Comparator;
+import java.util.Iterator;
+//import java.util.Stack;
+import java.util.*;
 
 public class Bintree<T extends Comparable<T>> {
 
+    
+    
+    
+    
+    
+    /**
+     * Fields 
+     */
     private int x;
     private int y;
     private int r;
-
+    private Comparator<T> comparator;
     private String nullTree = "This tree is empty";
     private int level;
-    private Node<KeyPair> temp;
-    private Node<KeyPair> root;
-
+    private int length;
+    private Seminar tomb;
+    private Node<Seminar> temp;
+    private Node<Seminar> root;
+    private MyIterator it; 
     public Bintree(int size) {
 
+
+        
         this.x = size;
         this.y = size;
-
-        root = null;
-
+        this.length = size;
+        it = new MyIterator();
+        tomb = null;
+        comparator = null;
         level = 1;
         temp = null;
     }
-
+    
+    public Iterator<Seminar> iterator()
+    {
+       return new MyIterator();
+    }
+ 
 
     public int size() {
         return x;
     }
+    
 
+    private int compare(Integer x, Integer y) {
+        // if (comparator == null)
+        return x.compareTo(y);
 
-    private void split(Node<KeyPair> p) {
-        temp = p;
-        System.out.println("temp node: " + p.data.getX() + ", " + p.data.getY());
-        p.left = null;
-        p.right = null;
-        p = null;
-        level = level + 1;
-        System.out.println("Current Level: " + level);
+// else
+// return comparator.compare(x, y);
+
     }
+
+
+//    private void split(Node<KeyPair> p) {
+//        // put the originally placed node to temp
+//        if (p.data.getX() != -1)
+//        {
+//            temp = p;
+//            System.out.println("temp node: " + temp.data.getX() + ", " + temp.data
+//                .getY());
+//        }
+//        
+//        
+//
+//        // make the left and right node
+//
+//        // set the root of the node null
+//
+//        p.data = tomb;
+//        p.left = null;
+//        p.right = null;
+//        // the level inorder search should be used to calculate level.
+//        // level = level + 1;
+//        // System.out.println("Current Level: " + level);
+//    }
 
 
     private void merge() {
 
     }
 
+    public Seminar getRoot() 
+    {
+        return root.data; 
+    }
+    private void split(Node<Seminar> curr)
+    {
+        
+        Seminar store = curr.data; 
+        curr.data = tomb; 
+        level = level + 1; 
+        if (level % 2 == 0) {
+            
+            // work with x axis 
+            if (store.x() > (x / level)) {
+                curr.right = new Node(store);
+            }
+            else {
+              curr.left = new Node(store); 
+            }
 
-    public void insertBin(KeyPair key) {
+        }
+        else {
+            if (store.y() > (y / level)) {
+               curr.right = new Node(store); 
+            }
+            else {
+                curr.left = new Node(store); 
+            }
+        }
+    }
+
+    public void insertBin(Seminar key) {
 
         root = insertBin(root, key);
+        
 
     }
 
 
-    private Node<KeyPair> insertBin(Node<KeyPair> p, KeyPair key) {
+    private Node<Seminar> insertBin(Node<Seminar> p, Seminar key) {
 
-        // if current left node is empty
+        // if current leaf node is empty
+        // just insert the pair.
         if (p == null) {
 
+            
             System.out.println("Successfully insert record with location " + key
-                .getX() + ", " + key.getY());
-            return new Node<KeyPair>(key, null, null);
-        }
+                .x() + ", " + key.y());
 
-        Node<KeyPair> pair = new Node<KeyPair>(key, null, null);
-        System.out.println("KeyPair is made with location: " + key.getX() + ", "
-            + key.getY());
-
-        // if not, split into internal nodes
-        // based on level, define to divide by x or y
-        // make a left to an internal node first.
-        split(p);
-        // divide in y-axis
-        if (level % 2 == 0 || level != 1) {
-            if (temp.data.getY() > y || pair.data.getY() < y) {
-
-            }
+            temp = new Node(key); 
+            
+            System.out.println(temp.data.toString());
+            return temp;
         }
         else {
-            int split = x / level;
+                   
+            split(p);
 
-            if (temp.data.getX() > split) {
-                p.right = temp;
+            if (level % 2 == 0) {
+                
+                System.out.println(level % 2 == 0);
+                if (key.x() > (x / level)) {
+                    System.out.println(key.x() > (x / level));
+
+                    //root.right = curr;
+                    //temp.data = tomb;
+                    System.out.println("placed to right");
+                    return insertBin(p.right, key);
+                }
+                else {
+                    System.out.println(key.x() > (x / level));
+//                    p.left = temp;
+//                    p.data = tomb;
+//                    System.out.println(temp.data.x());
+                    System.out.println("placed to left");
+                    return insertBin(p.left, key);
+                }
+
             }
-        }
-        return pair;
+            
+            else {
+                if (key.y() > (y / level)) {
+//                    System.out.println("a");
+//                    p.right = temp;
+//                    p.data = tomb;
+                    System.out.println("placed to right");
+                    insertBin(p.right, key);
+                }
+                else {
+//                    System.out.println("b");
+//                    p.left = temp;
+//                    p.data = tomb;
+                    System.out.println("placed to left");
+                    insertBin(p.left, key);
+                }
+            }
 
+        }
+        return null;
+    }
+
+
+    /**
+     * Method to check whether current node is leaf node or internal node
+     * 
+     * @param p
+     *            current node p
+     * @return false if this node is internal, true if this node is leaf.
+     */
+    private boolean isLeaf(Node<KeyPair> p) {
+
+        if (p.left == null && p.right == null) {
+            return true;
+        }
+        return false;
     }
 
 
     public void print() {
-        if (root == null) {
-            System.out.println("E");
-
+        while (it.hasNext())
+        {
+            if (it.next() == null)
+            {
+                System.out.println("E");
+            }
+            else {
+                //
+            }
         }
-        else {
-
-        }
+        
     }
 
-    private class Node<KeyPair> {
+    
+    /*****************************************************
+    *
+    *            TREE ITERATOR
+    *
+    ******************************************************/
 
-        private KeyPair data;
+    private class MyIterator implements Iterator<Seminar>
+    {
+       Stack<Node<Seminar>> stk = new Stack<Node<Seminar>>();
 
-        private Node<KeyPair> left;
+       public MyIterator()
+       {
+          if(root != null) stk.push((Node<Seminar>)root);
+       }
+       public boolean hasNext()
+       {
+          return !stk.isEmpty();
+       }
 
-        private Node<KeyPair> right;
+       public Seminar next()
+       {
+          Node<Seminar> cur = stk.peek();
+          if(cur.left != null)
+          {
+             stk.push(cur.left);
+          }
+          else
+          {
+             Node<Seminar> tmp = stk.pop();
+             while( tmp.right == null )
+             {
+                if(stk.isEmpty()) return cur.data;
+                tmp = stk.pop();
+             }
+             stk.push(tmp.right);
+          }
+
+          return cur.data;
+       }//end of next()
+
+       public void remove()
+       {
+
+       }
+    }    
+    private class Node<Seminar> {
+
+        //private Seminar data;
+
+        private Node<Seminar> left;
+
+        private Node<Seminar> right;
+        
+        
 
         /**
          * 
@@ -112,7 +283,7 @@ public class Bintree<T extends Comparable<T>> {
          * 
          * @param data
          * 
-         *            the keyvalue
+         *            the seminar
          * 
          * @param l
          * 
@@ -124,39 +295,23 @@ public class Bintree<T extends Comparable<T>> {
          * 
          */
 
-        public Node(
+        public Node(Seminar data, Node<Seminar> left, Node<Seminar> right) {
 
-            KeyPair data,
+            this.left = left;
 
-            Node<KeyPair> l,
-
-            Node<KeyPair> r) {
-
-            left = l;
-
-            right = r;
+            this.right = right;
 
             this.data = data;
 
         }
-
-
-        /**
-         * 
-         * The Node Constructor with KeyValue parameter
-         * 
-         * 
-         * 
-         * @param data
-         * 
-         *            the keyValue
-         * 
-         */
-
-        public Node(KeyPair data) {
-
-            this(data, null, null);
-
+        
+        public Node(Seminar data)
+        {
+            this.data = data;
+            this.left = null;
+            this.right = null; 
         }
+
+        
     }
 }
