@@ -24,6 +24,7 @@ import student.TestCase;
  * Value
  *
  * @author Moonwon Jeon
+ * @author busam
  * @version 2023/09/24
  */
 public class BSTTest extends TestCase {
@@ -174,8 +175,6 @@ public class BSTTest extends TestCase {
         assertTrue(bst.inorderSearch((String)"key"));
         assertTrue(bst.inorderSearch((String)kv3.getKey()));
         bst.inorderSearch((String)kv2.getKey());
-        bst.setRoot();
-        bst.inorderSearch((String)kv2.getKey());
     }
 
 
@@ -188,8 +187,20 @@ public class BSTTest extends TestCase {
         int a = 1;
         KeyValue keyInt = new KeyValue(a, sem);
         bst.insert(keyInt);
-        // bstInt.delete(a);
-        
+        bst.delete(keyInt);
+        bst.insert(kv1);
+        bst.insert(kv2);
+        bst.insert(kv3);
+        bst.delete(kv1);
+        bst.delete(kv2);
+        bst.delete(kv3);
+        Exception thrown = null;
+        try {
+            bst.delete(null);
+        }
+        catch (Exception exception) {
+            thrown = exception;
+        }
 
     }
 }

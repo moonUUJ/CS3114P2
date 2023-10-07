@@ -28,7 +28,7 @@ import java.util.*;
  * @version 2023/09/24
  * @param <T>
  *            the generics
- * @param <root>
+ * 
  */
 public class BST<T extends Comparable<T>> {
 
@@ -40,8 +40,7 @@ public class BST<T extends Comparable<T>> {
 
     private BinNode<KeyValue> radicle;
     private Comparator<T> comparator;
-    private int level; 
-
+    private int level;
 
     /**
      * 40
@@ -58,10 +57,16 @@ public class BST<T extends Comparable<T>> {
         level = 0;
     }
 
+
+    /**
+     * Method that sets the root to empty
+     */
     public void setRoot() {
         radicle = null;
         System.out.println("emptied");
     }
+
+
     /**
      * 
      * The compare method that has an important role to define whether
@@ -76,15 +81,13 @@ public class BST<T extends Comparable<T>> {
      */
     private int compare(T x, T y) {
         if (comparator == null)
-        return x.compareTo(y);
+            return x.compareTo(y);
 
-         else
-         return comparator.compare(x, y);
+        else
+            return comparator.compare(x, y);
 
     }
 
-
-   
 
     /**
      * 
@@ -100,8 +103,8 @@ public class BST<T extends Comparable<T>> {
 
     private BinNode<KeyValue> insert(BinNode<KeyValue> p, KeyValue key) {
         if (p == null) {
-            System.out.println("Successfully insert record with ID " + key
-                .getKey());
+
+            level++;
             return new BinNode<KeyValue>(key, null, null);
 
         }
@@ -118,6 +121,64 @@ public class BST<T extends Comparable<T>> {
 
         return p;
 
+    }
+
+
+    /**
+     * Delete method to delete a generic key of keyvalue object to the bst
+     * 
+     * @param key
+     *            the keyValue
+     */
+    public void delete(KeyValue key) {
+        radicle = delete(radicle, key);
+    }
+
+
+    @SuppressWarnings("unchecked")
+    private BinNode<KeyValue> delete(BinNode<KeyValue> p, KeyValue key) {
+        if (p == null) {
+            throw new RuntimeException("cannot delete.");
+        }
+        else if (compare((T)key.getKey(), (T)p.data.getKey()) < 0) {
+            p.left = delete(p.left, key);
+        }
+        else if (compare((T)key.getKey(), (T)p.data.getKey()) > 0) {
+            p.right = delete(p.right, key);
+        }
+        else {
+            if (p.left == null) {
+                System.out.println("Record with ID " + key.getKey()
+                    + " successfully deleted from the database");
+
+                return p.right;
+
+            }
+            else if (p.right == null) {
+                System.out.println("Record with ID " + key.getKey()
+                    + " successfully deleted from the database");
+
+                return p.left;
+            }
+            else {
+                // get data from the rightmost node in the left subtree
+                p.data = (KeyValue)retrieveData(p.left);
+                // delete the rightmost node in the left subtree
+                p.left = delete(p.left, p.data);
+            }
+        }
+
+        System.out.println("Record with ID " + key.getKey()
+            + " successfully deleted from the database");
+        return p;
+    }
+
+
+    private KeyValue retrieveData(BinNode<KeyValue> p) {
+        while (p.right != null)
+            p = p.right;
+
+        return p.data;
     }
 
     // private Node<T[]> insert(Node<T[]> p, T[] toInsert)
@@ -168,7 +229,9 @@ public class BST<T extends Comparable<T>> {
      */
 
     private boolean inorderSearch(BinNode<KeyValue> p, T element) {
-        level = level + 1; 
+        if (level == 0) {
+            return false;
+        }
         if (p == null) {
             return false;
 
@@ -176,7 +239,7 @@ public class BST<T extends Comparable<T>> {
 
         if (p.data.getKey() == element) {
             // return p.data;
-            System.out.println(p.data.getSeminar() + "with level: " + level);
+            // System.out.println(p.data.getSeminar() + "with level: " + level);
             return true;
         }
         else if (compare((T)p.data.getKey(), element) > 0) {
@@ -188,13 +251,16 @@ public class BST<T extends Comparable<T>> {
 
     }
 
+
     /**
-     * Method to get the current level 
-     * @return level the height of the binary search tree 
+     * Method to get the current level
+     * 
+     * @return level the height of the binary search tree
      */
     public int getLevel() {
         return level;
     }
+
 
     /**
      * 
@@ -370,130 +436,127 @@ public class BST<T extends Comparable<T>> {
      * 
      */
 
-    
+    private class BinNode<KeyValue> {
 
-        private class BinNode<KeyValue> {
+        private KeyValue data;
 
-            private KeyValue data;
+        private BinNode<KeyValue> left;
 
-            private BinNode<KeyValue> left;
+        private BinNode<KeyValue> right;
 
-            private BinNode<KeyValue> right;
+        /**
+         * 
+         * Constructor for BinNode
+         * 
+         * 
+         * 
+         * @param data
+         * 
+         *            the keyvalue
+         * 
+         * @param l
+         * 
+         *            the left binNode
+         * 
+         * @param r
+         * 
+         *            the right binNode
+         * 
+         */
 
-            /**
-             * 
-             * Constructor for BinNode
-             * 
-             * 
-             * 
-             * @param data
-             * 
-             *            the keyvalue
-             * 
-             * @param l
-             * 
-             *            the left binNode
-             * 
-             * @param r
-             * 
-             *            the right binNode
-             * 
-             */
+        public BinNode(
 
-            public BinNode(
+            KeyValue data,
 
-                KeyValue data,
+            BinNode<KeyValue> l,
 
-                BinNode<KeyValue> l,
+            BinNode<KeyValue> r) {
 
-                BinNode<KeyValue> r) {
+            left = l;
 
-                left = l;
+            right = r;
 
-                right = r;
-
-                this.data = data;
-
-            }
-
-            // public String toString() {
-            // return data.toString();
-
-            // }
+            this.data = data;
 
         }
 
-        // public Iterator<T> iterator() {
-
-        // return new MyIterator();
-
-        // }
-        //
-        // // pre-order
-        // private class MyIterator implements Iterator<T> {
-        // Stack<BinNode<T>> stk = new Stack<BinNode<T>>();
-        //
-        // public MyIterator() {
-        // if (radicle != null)
-        // stk.push((BST<T>.BinNode<T>)radicle);
+        // public String toString() {
+        // return data.toString();
 
         // }
 
-        //
-
-        //
-
-        // public boolean hasNext() {
-
-        // return !stk.isEmpty();
-
-        // }
-
-        //
-
-        //
-
-        // public T next() {
-
-        // BinNode<T> cur = stk.peek();
-
-        // if (cur.left != null) {
-
-        // stk.push(cur.left);
-
-        // }
-
-        // else {
-
-        // BinNode<T> tmp = stk.pop();
-
-        // while (tmp.right == null) {
-
-        // if (stk.isEmpty())
-
-        // return cur.data;
-
-        // tmp = stk.pop();
-
-        // }
-
-        // stk.push(tmp.right);
-
-        // }
-
-        //
-
-        // return cur.data;
-
-        // }// end of next()
-
-        //
-        //
-
-        // public void remove() {
-
-        //
-
-        // }
     }
 
+    // public Iterator<T> iterator() {
+
+    // return new MyIterator();
+
+    // }
+    //
+    // // pre-order
+    // private class MyIterator implements Iterator<T> {
+    // Stack<BinNode<T>> stk = new Stack<BinNode<T>>();
+    //
+    // public MyIterator() {
+    // if (radicle != null)
+    // stk.push((BST<T>.BinNode<T>)radicle);
+
+    // }
+
+    //
+
+    //
+
+    // public boolean hasNext() {
+
+    // return !stk.isEmpty();
+
+    // }
+
+    //
+
+    //
+
+    // public T next() {
+
+    // BinNode<T> cur = stk.peek();
+
+    // if (cur.left != null) {
+
+    // stk.push(cur.left);
+
+    // }
+
+    // else {
+
+    // BinNode<T> tmp = stk.pop();
+
+    // while (tmp.right == null) {
+
+    // if (stk.isEmpty())
+
+    // return cur.data;
+
+    // tmp = stk.pop();
+
+    // }
+
+    // stk.push(tmp.right);
+
+    // }
+
+    //
+
+    // return cur.data;
+
+    // }// end of next()
+
+    //
+    //
+
+    // public void remove() {
+
+    //
+
+    // }
+}
