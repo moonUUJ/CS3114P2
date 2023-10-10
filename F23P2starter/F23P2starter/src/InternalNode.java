@@ -1,16 +1,16 @@
 
-public class InternalNode<Seminar> implements BiNode {
+public class InternalNode implements BiNode {
 
     //private Seminar data;
 
     private Seminar data; 
-    private LeafNode<Seminar> left;
+    private LeafNode left;
 
-    private LeafNode<Seminar> right;
+    private LeafNode right;
     
     
     
-    public InternalNode(LeafNode<Seminar> l, LeafNode<Seminar> r) 
+    public InternalNode(LeafNode l, LeafNode r) 
     {
          
         this.left = l; 
@@ -20,14 +20,14 @@ public class InternalNode<Seminar> implements BiNode {
 
 
     @Override
-    public void insert(Seminar Key) {
+    public BiNode insert(Seminar Key) {
         // TODO Auto-generated method stub
         
     }
 
 
     @Override
-    public void traverse() {
+    public String traverse() {
         // TODO Auto-generated method stub
         
     }

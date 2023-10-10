@@ -6,8 +6,6 @@
  * 
  * @author busam
  * 
- * @author Moonwon Jeon
- * 
  * @version 2023/09/24
  * 
  * @param <T>
